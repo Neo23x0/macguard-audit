@@ -1,0 +1,292 @@
+{
+  "schema_version": "1.0",
+  "tool": "macguard-audit",
+  "tool_version": "1.0.0",
+  "collected_at": "2026-02-24T09:27:14Z",
+  "collection_duration_ms": 7709,
+  "run_as_root": false,
+  "collection_warnings": [
+    "auto_updates: could not determine auto-update status",
+    "time_sync: could not determine NTP status from systemsetup or launchctl",
+    "secure_boot: bputil did not return recognizable security level",
+    "firewall_global_state: requires root; skipped",
+    "firewall_stealth_mode: requires root; skipped",
+    "firewall_logging: requires root; skipped",
+    "profiles: requires root; skipped",
+    "system_extensions: requires root; skipped"
+  ],
+  "host": {
+    "hostname": "ion",
+    "hardware_uuid": "E5351770-8C8A-5F7B-838B-8C19B1EDBC8F",
+    "serial_hash": null,
+    "model": "Mac14,6",
+    "arch": "arm64",
+    "org_id": null,
+    "environment": null,
+    "tags": [],
+    "mdm_enrolled": false,
+    "mdm_server_url": null
+  },
+  "os": {
+    "name": "macOS",
+    "version": "15.7.4",
+    "build": "24G517",
+    "major": 15,
+    "minor": 7,
+    "kernel_version": "",
+    "uptime_seconds": 352671
+  },
+  "user": {
+    "current_user": "neo",
+    "console_user": "neo",
+    "uid": 501
+  },
+  "posture": {
+    "filevault": {
+      "status": "pass",
+      "value": "enabled",
+      "raw": "FileVault is On.",
+      "privilege": "user",
+      "check_duration_ms": 144,
+      "error": null
+    },
+    "gatekeeper": {
+      "status": "pass",
+      "value": {
+        "state": "enabled",
+        "assessments_enabled": true
+      },
+      "raw": "assessments enabled",
+      "privilege": "user",
+      "check_duration_ms": 169,
+      "error": null
+    },
+    "sip": {
+      "status": "pass",
+      "value": "enabled",
+      "raw": "System Integrity Protection status: enabled.",
+      "privilege": "user",
+      "check_duration_ms": 143,
+      "error": null
+    },
+    "ssh_remote_login": {
+      "status": "pass",
+      "value": "disabled",
+      "raw": "Could not find service \"com.openssh.sshd\" in domain for port",
+      "privilege": "user",
+      "check_duration_ms": 267,
+      "error": null
+    },
+    "screen_lock_timeout": {
+      "status": "warn",
+      "value": 1200,
+      "raw": "1200",
+      "privilege": "user",
+      "check_duration_ms": 255,
+      "error": null
+    },
+    "auto_login": {
+      "status": "fail",
+      "value": "not_disabled",
+      "raw": "key DisableAutoLogin not found",
+      "privilege": "user",
+      "check_duration_ms": 133,
+      "error": null
+    },
+    "guest_account": {
+      "status": "pass",
+      "value": "disabled",
+      "raw": "0",
+      "privilege": "user",
+      "check_duration_ms": 141,
+      "error": null
+    },
+    "xprotect_version": {
+      "status": "pass",
+      "value": "5330",
+      "raw": "path=/Library/Apple/System/Library/CoreServices/XProtect.bundle/Contents/Info.plist version=5330",
+      "privilege": "user",
+      "check_duration_ms": 141,
+      "error": null
+    },
+    "xprotect_remediator_version": {
+      "status": "pass",
+      "value": "157",
+      "raw": "157",
+      "privilege": "user",
+      "check_duration_ms": 141,
+      "error": null
+    },
+    "xprotect_last_update": {
+      "status": "pass",
+      "value": "2026-02-13T03:14:55Z",
+      "raw": "mtime=2026-02-13T03:14:55Z path=/Library/Apple/System/Library/CoreServices/XProtect.bundle",
+      "privilege": "user",
+      "check_duration_ms": 47,
+      "error": null
+    },
+    "mrt_version": {
+      "status": "pass",
+      "value": "1.93",
+      "raw": "1.93",
+      "privilege": "user",
+      "check_duration_ms": 141,
+      "error": null
+    },
+    "mrt_last_update": {
+      "status": "fail",
+      "value": "2024-09-18T12:59:51Z",
+      "raw": "mtime=2024-09-18T12:59:51Z",
+      "privilege": "user",
+      "check_duration_ms": 48,
+      "error": "MRT last updated 523 days ago (threshold: 30 days)"
+    },
+    "auto_updates": {
+      "status": "unknown",
+      "value": null,
+      "raw": "Automatic checking for updates is turned on",
+      "privilege": "user",
+      "check_duration_ms": 256,
+      "error": "could not determine auto-update status"
+    },
+    "pending_updates": {
+      "status": "pass",
+      "value": null,
+      "raw": "no pending updates (cached)",
+      "privilege": "user",
+      "check_duration_ms": 145,
+      "error": null
+    },
+    "is_admin": {
+      "status": "warn",
+      "value": true,
+      "raw": "yes neo is a member of admin",
+      "privilege": "user",
+      "check_duration_ms": 141,
+      "error": null
+    },
+    "time_sync": {
+      "status": "unknown",
+      "value": null,
+      "raw": "Could not find service \"com.apple.timed\" in domain for port",
+      "privilege": "user",
+      "check_duration_ms": 267,
+      "error": "could not determine NTP status from systemsetup or launchctl"
+    },
+    "airdrop": {
+      "status": "fail",
+      "value": "everyone",
+      "raw": "sharingd.DiscoverableMode=Everyone",
+      "privilege": "user",
+      "check_duration_ms": 264,
+      "error": null
+    },
+    "remote_management": {
+      "status": "pass",
+      "value": "disabled",
+      "raw": "screensharing=false RemoteDesktop.agent=false",
+      "privilege": "user",
+      "check_duration_ms": 268,
+      "error": null
+    },
+    "browser_versions": {
+      "status": "pass",
+      "value": {
+        "safari": "26.3",
+        "chrome": "144.0.7559.97",
+        "firefox": "147.0.1",
+        "brave": "145.1.87.186",
+        "edge": "not_installed",
+        "arc": "not_installed"
+      },
+      "raw": null,
+      "privilege": "user",
+      "check_duration_ms": 546,
+      "error": null
+    },
+    "disk_encryption_apfs": {
+      "status": "pass",
+      "value": "encrypted",
+      "raw": "|   FileVault:                 Yes (Unlocked)",
+      "privilege": "user",
+      "check_duration_ms": 364,
+      "error": null
+    },
+    "secure_boot": {
+      "status": "unknown",
+      "value": null,
+      "raw": "The tool requires running as root",
+      "privilege": "user",
+      "check_duration_ms": 137,
+      "error": "bputil did not return recognizable security level"
+    },
+    "tcc_version": {
+      "status": "pass",
+      "value": "1",
+      "raw": "1",
+      "privilege": "user",
+      "check_duration_ms": 141,
+      "error": null
+    },
+    "firewall_global_state": {
+      "status": "unknown",
+      "value": null,
+      "raw": null,
+      "privilege": "root",
+      "check_duration_ms": 19,
+      "error": "requires root; skipped"
+    },
+    "firewall_stealth_mode": {
+      "status": "unknown",
+      "value": null,
+      "raw": null,
+      "privilege": "root",
+      "check_duration_ms": 19,
+      "error": "requires root; skipped"
+    },
+    "firewall_logging": {
+      "status": "unknown",
+      "value": null,
+      "raw": null,
+      "privilege": "root",
+      "check_duration_ms": 20,
+      "error": "requires root; skipped"
+    },
+    "profiles": {
+      "status": "unknown",
+      "value": null,
+      "raw": null,
+      "privilege": "root",
+      "check_duration_ms": 20,
+      "error": "requires root; skipped"
+    },
+    "system_extensions": {
+      "status": "unknown",
+      "value": null,
+      "raw": null,
+      "privilege": "root",
+      "check_duration_ms": 19,
+      "error": "requires root; skipped"
+    },
+    "firmware_version": {
+      "status": "pass",
+      "value": {
+        "firmware_type": "iboot",
+        "firmware_version": "13822.81.10",
+        "bridge_version": null
+      },
+      "raw": "type=iboot version=13822.81.10",
+      "privilege": "user",
+      "check_duration_ms": 162,
+      "error": null
+    }
+  },
+  "summary": {
+    "total": 28,
+    "pass": 15,
+    "fail": 3,
+    "warn": 2,
+    "unknown": 8,
+    "score_pct": 80
+  }
+}

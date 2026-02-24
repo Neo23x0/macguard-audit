@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  LaunchAgent: runs macguard-audit as the logged-in user every 4 hours.
+  Install: cp this ~/Library/LaunchAgents/ && launchctl load -w <this>
+  User-level checks only (no root required).
+  Config: /Library/Application Support/macguard-audit/macguard-audit.json
+  or defaults if config not found.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.example.macguard-audit-user</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/macguard-audit.sh</string>
+        <string>--config</string>
+        <string>/Library/Application Support/macguard-audit/macguard-audit.json</string>
+    </array>
+
+    <!-- Run every 14400 seconds (4 hours) -->
+    <key>StartInterval</key>
+    <integer>14400</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>ThrottleInterval</key>
+    <integer>300</integer>
+
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/macguard-audit-user.out.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/macguard-audit-user.err.log</string>
+</dict>
+</plist>

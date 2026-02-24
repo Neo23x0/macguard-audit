@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/example/macguard-audit/config/macguard-audit.schema.json",
+  "title": "macguard-audit configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "collection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled_checks": {
+          "oneOf": [
+            {"type": "string", "enum": ["all"]},
+            {"type": "array", "items": {"type": "string"}, "minItems": 1}
+          ],
+          "default": "all"
+        },
+        "disabled_checks": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": []
+        },
+        "timeout_per_check_secs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120,
+          "default": 15
+        },
+        "timeout_total_secs": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 600,
+          "default": 120
+        },
+        "run_root_checks": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "file": {
+          "type": "string",
+          "default": "-"
+        },
+        "rotate_max_lines": {
+          "type": "integer",
+          "minimum": 10,
+          "default": 1000
+        },
+        "atomic_write": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "screen_lock_timeout_max_secs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400,
+          "default": 600
+        },
+        "airdrop_policy": {
+          "type": "string",
+          "enum": ["off", "contacts_or_off", "any"],
+          "default": "contacts_or_off"
+        },
+        "is_admin_is_fail": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "transport": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {"type": "boolean", "default": false},
+        "type": {
+          "type": "string",
+          "enum": ["splunk_hec", "https_post"],
+          "default": "splunk_hec"
+        },
+        "splunk_hec": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": {"type": "string", "format": "uri"},
+            "token_source": {
+              "type": "string",
+              "enum": ["keychain", "config", "env"],
+              "default": "keychain"
+            },
+            "token_keychain_service": {"type": "string", "default": "macguard-audit"},
+            "token_keychain_account": {"type": "string", "default": "splunk_hec_token"},
+            "token_config_value": {"type": "string", "default": ""},
+            "token_env_var": {"type": "string", "default": "MACGUARD_SPLUNK_TOKEN"},
+            "index": {"type": "string", "default": ""},
+            "sourcetype": {"type": "string", "default": "macguard:posture"},
+            "tls_verify": {"type": "boolean", "default": true},
+            "connect_timeout_secs": {"type": "integer", "minimum": 1, "default": 10},
+            "max_retries": {"type": "integer", "minimum": 0, "maximum": 10, "default": 3},
+            "retry_delay_secs": {"type": "integer", "minimum": 1, "default": 5}
+          }
+        },
+        "https_post": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": {"type": "string", "format": "uri"},
+            "auth_header": {"type": "string", "default": "Authorization"},
+            "token_source": {
+              "type": "string",
+              "enum": ["keychain", "config", "env"],
+              "default": "keychain"
+            },
+            "token_keychain_service": {"type": "string", "default": "macguard-audit"},
+            "token_keychain_account": {"type": "string", "default": "https_post_token"},
+            "token_config_value": {"type": "string", "default": ""},
+            "token_env_var": {"type": "string", "default": "MACGUARD_HTTPS_TOKEN"},
+            "tls_verify": {"type": "boolean", "default": true},
+            "connect_timeout_secs": {"type": "integer", "minimum": 1, "default": 10},
+            "max_retries": {"type": "integer", "minimum": 0, "maximum": 10, "default": 3}
+          }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hash_serial": {"type": "boolean", "default": true},
+        "hash_salt": {"type": "string", "default": ""}
+      }
+    },
+    "logging": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"],
+          "default": "info"
+        },
+        "syslog": {"type": "boolean", "default": true},
+        "syslog_facility": {"type": "string", "default": "local0"}
+      }
+    },
+    "org_id": {"type": "string", "default": ""},
+    "environment": {"type": "string", "default": ""},
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": []
+    }
+  }
+}

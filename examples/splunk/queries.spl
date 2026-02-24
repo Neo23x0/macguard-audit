@@ -1,0 +1,116 @@
+| ============================================================
+| macguard-audit — Sample Splunk SPL Queries
+| Index: macos_security  Sourcetype: macguard:posture
+| ============================================================
+
+| ----------------------------------------------------------
+| 1. Hosts with FileVault disabled (latest report per host)
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'posture.filevault.status'="fail"
+| table host, collected_at, 'posture.filevault.value', 'os.version'
+| rename host AS "Hostname",
+         collected_at AS "Last Seen",
+         'posture.filevault.value' AS "FileVault",
+         'os.version' AS "macOS Version"
+
+
+| ----------------------------------------------------------
+| 2. Hosts not on the latest macOS build (update BUILD constant)
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'os.build'!="24D70"
+| table host, 'os.version', 'os.build', collected_at
+| sort -'os.build'
+
+
+| ----------------------------------------------------------
+| 3. Admin users with FileVault disabled
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'posture.is_admin.value'=true AND 'posture.filevault.status'="fail"
+| table host, 'user.current_user', 'os.version', collected_at
+| rename 'user.current_user' AS "User"
+
+
+| ----------------------------------------------------------
+| 4. Hosts with Gatekeeper disabled
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'posture.gatekeeper.status'="fail"
+| table host, collected_at, 'os.version'
+
+
+| ----------------------------------------------------------
+| 5. Pass/fail rate per check over the last 30 days
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture" earliest=-30d
+| eval filevault_pass=if('posture.filevault.status'="pass",1,0)
+| eval gatekeeper_pass=if('posture.gatekeeper.status'="pass",1,0)
+| eval sip_pass=if('posture.sip.status'="pass",1,0)
+| eval ssh_pass=if('posture.ssh_remote_login.status'="pass",1,0)
+| eval firewall_pass=if('posture.firewall_global_state.status'="pass",1,0)
+| timechart span=1d
+    avg(filevault_pass) AS "FileVault Pass Rate",
+    avg(gatekeeper_pass) AS "Gatekeeper Pass Rate",
+    avg(sip_pass) AS "SIP Pass Rate",
+    avg(ssh_pass) AS "SSH Disabled Rate",
+    avg(firewall_pass) AS "Firewall Pass Rate"
+
+
+| ----------------------------------------------------------
+| 6. Score distribution (histogram of score_pct)
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| bin 'summary.score_pct' span=10
+| stats count BY 'summary.score_pct'
+| sort 'summary.score_pct'
+| rename 'summary.score_pct' AS "Score Range (pct)", count AS "Hosts"
+
+
+| ----------------------------------------------------------
+| 7. Hosts with AirDrop set to Everyone
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'posture.airdrop.value'="everyone"
+| table host, 'user.current_user', collected_at
+| rename 'user.current_user' AS "User"
+
+
+| ----------------------------------------------------------
+| 8. Hosts with stale XProtect (last_update check failed)
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'posture.xprotect_last_update.status'="fail"
+| table host, 'posture.xprotect_last_update.value', collected_at
+
+
+| ----------------------------------------------------------
+| 9. Hosts not seen in the last 2 hours (gap detection)
+|    (Run as a scheduled alert, lookback = 2h)
+| ----------------------------------------------------------
+| inputlookup macguard_host_inventory
+| join type=left host [
+    search index=macos_security sourcetype="macguard:posture" earliest=-2h
+    | dedup host sortby -_time
+    | table host, _time
+    | rename _time AS last_seen
+]
+| where isnull(last_seen)
+| table host, last_known_seen
+
+
+| ----------------------------------------------------------
+| 10. SIP custom configuration (partial enforcement)
+| ----------------------------------------------------------
+index=macos_security sourcetype="macguard:posture"
+| dedup host sortby -_time
+| where 'posture.sip.value'="custom_configuration"
+| table host, 'posture.sip.value', collected_at

@@ -1,0 +1,105 @@
+{
+  "_comment": "macguard-audit configuration example. Copy to macguard-audit.json and remove _comment keys.",
+
+  "collection": {
+    "_comment_enabled": "Use 'all' or a list of check names to run (see macguard-audit.sh --list-checks)",
+    "enabled_checks": "all",
+
+    "_comment_disabled": "Check names to skip even when enabled_checks=all",
+    "disabled_checks": [],
+
+    "timeout_per_check_secs": 15,
+    "timeout_total_secs": 120,
+
+    "_comment_root": "Set true when running as root via LaunchDaemon to enable firewall/profiles/system_extensions checks",
+    "run_root_checks": false
+  },
+
+  "output": {
+    "_comment_file": "Path to write JSONL output. Use '-' for stdout.",
+    "file": "/var/log/macguard-audit/posture.jsonl",
+
+    "rotate_max_lines": 1000,
+    "atomic_write": true
+  },
+
+  "thresholds": {
+    "_comment_screen_lock": "Fail if screen lock idle timeout exceeds this many seconds (default 600 = 10 min)",
+    "screen_lock_timeout_max_secs": 600,
+
+    "_comment_airdrop": "Acceptable AirDrop state: 'off', 'contacts_or_off' (default), or 'any'",
+    "airdrop_policy": "contacts_or_off",
+
+    "_comment_admin": "Set true to produce a 'fail' (instead of 'warn') when the current user is an admin",
+    "is_admin_is_fail": false
+  },
+
+  "transport": {
+    "enabled": false,
+
+    "_comment_type": "Transport backend: 'splunk_hec' or 'https_post'",
+    "type": "splunk_hec",
+
+    "splunk_hec": {
+      "url": "https://splunk.example.com:8088/services/collector/event",
+
+      "_comment_token_source": "How to retrieve the HEC token: 'keychain' (recommended), 'config', or 'env'",
+      "token_source": "keychain",
+
+      "_comment_keychain": "Keychain service/account used when token_source=keychain",
+      "token_keychain_service": "macguard-audit",
+      "token_keychain_account": "splunk_hec_token",
+
+      "_comment_store_token": "Run this once to store the token: security add-generic-password -s macguard-audit -a splunk_hec_token -w 'YOUR_TOKEN' -U",
+
+      "_comment_config_value": "Used when token_source=config. Avoid; prefer keychain.",
+      "token_config_value": "",
+
+      "_comment_env_var": "Environment variable name when token_source=env",
+      "token_env_var": "MACGUARD_SPLUNK_TOKEN",
+
+      "index": "macos_security",
+      "sourcetype": "macguard:posture",
+      "tls_verify": true,
+      "connect_timeout_secs": 10,
+      "max_retries": 3,
+      "retry_delay_secs": 5
+    },
+
+    "https_post": {
+      "url": "https://ingest.example.com/api/v1/events",
+      "auth_header": "Authorization",
+      "token_source": "keychain",
+      "token_keychain_service": "macguard-audit",
+      "token_keychain_account": "https_post_token",
+      "token_config_value": "",
+      "token_env_var": "MACGUARD_HTTPS_TOKEN",
+      "tls_verify": true,
+      "connect_timeout_secs": 10,
+      "max_retries": 3
+    }
+  },
+
+  "privacy": {
+    "_comment_hash": "Hash the device serial number before including it in reports",
+    "hash_serial": true,
+
+    "_comment_salt": "Org-wide salt for serial hashing. Set a random value per deployment. Leave empty to skip hashing.",
+    "hash_salt": ""
+  },
+
+  "logging": {
+    "_comment_level": "Log verbosity: debug, info, warn, error",
+    "level": "info",
+    "syslog": true,
+    "syslog_facility": "local0"
+  },
+
+  "_comment_org_id": "Arbitrary org identifier included in every report",
+  "org_id": "acme-corp",
+
+  "environment": "production",
+
+  "_comment_tags": "Arbitrary string tags included in every report",
+  "tags": ["laptop", "employee"]
+}

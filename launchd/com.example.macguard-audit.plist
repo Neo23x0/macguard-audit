@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  LaunchDaemon: runs macguard-audit as root every hour.
+  Install: sudo cp this /Library/LaunchDaemons/ && sudo launchctl load -w <this>
+  Enables firewall, profiles, and system_extensions checks.
+  Requires config at /etc/macguard-audit/macguard-audit.json
+  with "run_root_checks": true.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.example.macguard-audit</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/macguard-audit.sh</string>
+        <string>--config</string>
+        <string>/etc/macguard-audit/macguard-audit.json</string>
+    </array>
+
+    <!-- Run as root so firewall/profiles/system_extensions checks work -->
+    <key>UserName</key>
+    <string>root</string>
+
+    <!-- Run every 3600 seconds (1 hour) -->
+    <key>StartInterval</key>
+    <integer>3600</integer>
+
+    <!-- Also run when the daemon is loaded -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Minimum interval between consecutive runs -->
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+
+    <!-- Restart automatically if the job exits unexpectedly -->
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>/var/log/macguard-audit/daemon.out.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/var/log/macguard-audit/daemon.err.log</string>
+
+    <!-- Restrict write access; reads /etc and /var/log/macguard-audit -->
+    <key>HardResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>64</integer>
+    </dict>
+</dict>
+</plist>

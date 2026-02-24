@@ -1,0 +1,8 @@
+System Integrity Protection status: enabled (Custom Configuration).
+	Apple Internal: disabled
+	Kext Signing: disabled
+	Filesystem Protections: enabled
+	Debugging Restrictions: enabled
+	DTrace Restrictions: enabled
+	NVRAM Protections: enabled
+	BaseSystem Verification: enabled
